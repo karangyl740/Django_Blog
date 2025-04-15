@@ -1,8 +1,11 @@
 from django.shortcuts import render,redirect
 from blogs.models import Blogs,Category
 from django.contrib.auth.decorators import login_required
-from .forms import CategoryForm
+from .forms import CategoryForm,BlogPostForm
 from django.shortcuts import get_object_or_404
+from django.template.defaultfilters import slugify
+
+
 
 # Create your views here.
 @login_required(login_url='login')
@@ -52,3 +55,55 @@ def delete_categories(request,pk):
     category = get_object_or_404(Category, pk=pk)
     category.delete()
     return redirect('categories')
+
+def posts(request):
+    posts = Blogs.objects.all()
+    context = {
+        'posts':posts
+        }
+    return render(request,'dashboard/posts.html', context)
+
+def add_posts(request):
+    if request.method == 'POST':
+        form = BlogPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            title = form.cleaned_data['title']
+            post.slug = slugify(title)
+            post.save() 
+            return redirect('posts')
+        else:
+            pass
+    form = BlogPostForm()
+    context = {
+        'form':form
+    }
+    return render(request,'dashboard/add_posts.html',context)
+
+
+
+def delete_posts(request,pk):
+    post = get_object_or_404(Blogs,pk=pk)
+    post.delete()
+    return redirect('posts')
+
+def edit_posts(request, pk):
+    # Fetch the blog post by primary key (similar to edit_categories)
+    post = get_object_or_404(Blogs, pk=pk)
+
+    if request.method == 'POST':
+        # Use BlogPostForm for editing (similar to CategoryForm in edit_categories)
+        form = BlogPostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('posts')  # Redirect to posts page after saving
+
+    # Initialize the form with the post instance (similar to edit_categories)
+    form = BlogPostForm(instance=post)
+    context = {
+        'form': form,
+        'post': post  # Pass the post object to the template
+    }
+    return render(request, 'dashboard/edit_posts.html', context)
