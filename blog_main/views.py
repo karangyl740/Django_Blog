@@ -53,3 +53,31 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect('home')
+
+def help_center(request):
+    return render(request, 'help_center.html')
+
+
+from django.core.mail import send_mail
+from django.conf import settings
+
+def contact_us(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+        # Example: Send email to support
+        send_mail(
+            subject,
+            f'Message from {name} ({email}):\n\n{message}',
+            email,
+            [settings.DEFAULT_FROM_EMAIL],
+            fail_silently=False,
+        )
+        return redirect('contact')  # Redirect after submission
+    return render(request, 'contact_us.html')
+
+
+def terms_of_service(request):
+    return render(request, 'terms_of_service.html')

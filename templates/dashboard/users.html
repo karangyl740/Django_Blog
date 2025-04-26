@@ -1,6 +1,7 @@
 {% extends '../base/base.html' %}
 
 {% block content %}
+<br>
 <div class="row">
     <!-- left sidebar -->
     <!-- load left sidebar -->
@@ -27,7 +28,7 @@
             <tbody>
                 {% for user in users %}
                 <tr>
-                    <th>{{ forloop.counter }}</th>
+                    <th style="color: green;">{{ forloop.counter }}</th>
                     <td>{{ user.first_name }} {{ user.last_name }}</td>
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>

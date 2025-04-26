@@ -1,6 +1,7 @@
 {% extends '../base/base.html' %}
 
 {% block content %}
+<br>
 <div class="row">
     <!-- left sidebar -->
     <!-- load left sidebar -->
@@ -18,20 +19,25 @@
                     <th>Category Name</th>
                     <th>Created At</th>
                     <th>Updated At</th>
+                    {% if request.user.is_superuser %}
                     <th>Action</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
                 {% for cat in categories %}
                 <tr>
-                    <th>{{ forloop.counter }}</th>
+                    <th style="color: green;">{{ forloop.counter }}</th>
                     <td>{{ cat.category_name }}</td>
                     <td>{{ cat.created_at }}</td>
                     <td>{{ cat.updated_at }}</td>
                     <td>
-                        <a href="{% url 'edit_categories' cat.id %}"><i class="fa fa-edit text-success"></i> </a>&nbsp;&nbsp;
-                        <a href="{% url 'delete_categories' cat.id %}"> <i class="fa fa-trash text-danger"></i>
-                        </a>
+                        {% if request.user.is_superuser %}
+                    <td>
+                        <a href="{% url 'edit_categories' cat.id %}"><i class="fa fa-edit text-success"></i></a>&nbsp;&nbsp;
+                        <a href="{% url 'delete_categories' cat.id %}"><i class="fa fa-trash text-danger"></i></a>
+                    </td>
+                    {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
