@@ -33,3 +33,7 @@ Alongside blogging, Blogix also features a handy Notes mini-app—your personal 
   python manage.py createsuperuser
 ```
 
+
+
+## 🛠 Skills
+Javascript, HTML, CSS , Django , Python
